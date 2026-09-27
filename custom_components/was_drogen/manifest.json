@@ -1,0 +1,13 @@
+{
+  "domain": "was_drogen",
+  "name": "Was drogen",
+  "codeowners": ["@robbinonline"],
+  "config_flow": true,
+  "after_dependencies": ["weather"],
+  "documentation": "https://github.com/robbinonline/ha-was-drogen",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/robbinonline/ha-was-drogen/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}

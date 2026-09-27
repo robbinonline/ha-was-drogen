@@ -1,0 +1,143 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Weerstation",
+        "description": "Kies de sensoren van je weerstation. Alleen temperatuur en luchtvochtigheid (of dauwpunt) zijn verplicht; hoe meer sensoren, hoe preciezer de score.",
+        "data": {
+          "name": "Naam",
+          "temperature": "Buitentemperatuur",
+          "humidity": "Luchtvochtigheid",
+          "dew_point": "Dauwpunt",
+          "vpd": "Dampdrukdeficit (VPD)",
+          "wind_speed": "Windsnelheid",
+          "wind_gust": "Windvlagen",
+          "rain_rate": "Regenintensiteit (mm/h)",
+          "rain_hourly": "Regen afgelopen uur (mm)",
+          "solar": "Zoninstraling (W/m²)"
+        },
+        "data_description": {
+          "humidity": "Luchtvochtigheid of dauwpunt is verplicht; het andere wordt berekend.",
+          "vpd": "Optioneel. Zonder deze sensor wordt de VPD berekend uit temperatuur en luchtvochtigheid.",
+          "wind_speed": "Wordt omgerekend naar km/h.",
+          "rain_hourly": "Stopt de score als er het afgelopen uur meer regen viel dan de ingestelde grens."
+        }
+      },
+      "forecast": {
+        "title": "Weersverwachting",
+        "description": "Kies de weerentiteiten voor de uurverwachting. Met twee bronnen worden ze per uur samengevoegd.",
+        "data": {
+          "forecast_primary": "Primaire weersverwachting",
+          "forecast_secondary": "Aanvullende weersverwachting"
+        },
+        "data_description": {
+          "forecast_primary": "Deze bron wint per uur, bijvoorbeeld KNMI.",
+          "forecast_secondary": "Vult ontbrekende velden (zoals luchtvochtigheid) en latere uren aan, bijvoorbeeld Met.no."
+        }
+      }
+    },
+    "error": {
+      "need_humidity": "Kies een sensor voor luchtvochtigheid of dauwpunt.",
+      "order_vpd": "De VPD-grenzen moeten oplopen: 1 ≤ 2 ≤ 3 punten.",
+      "order_spread": "De grens voor 2 punten moet minstens die voor 1 punt zijn.",
+      "order_wind": "'Van' moet kleiner zijn dan 'tot en met'.",
+      "order_day": "Het beginuur moet voor het einduur liggen."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Was drogen",
+        "menu_options": {
+          "station": "Weerstation",
+          "forecast": "Weersverwachting",
+          "thresholds": "Drempels en tijden"
+        }
+      },
+      "station": {
+        "title": "Weerstation",
+        "data": {
+          "temperature": "Buitentemperatuur",
+          "humidity": "Luchtvochtigheid",
+          "dew_point": "Dauwpunt",
+          "vpd": "Dampdrukdeficit (VPD)",
+          "wind_speed": "Windsnelheid",
+          "wind_gust": "Windvlagen",
+          "rain_rate": "Regenintensiteit (mm/h)",
+          "rain_hourly": "Regen afgelopen uur (mm)",
+          "solar": "Zoninstraling (W/m²)"
+        },
+        "data_description": {
+          "humidity": "Luchtvochtigheid of dauwpunt is verplicht; het andere wordt berekend.",
+          "vpd": "Optioneel. Zonder deze sensor wordt de VPD berekend uit temperatuur en luchtvochtigheid.",
+          "wind_speed": "Wordt omgerekend naar km/h.",
+          "rain_hourly": "Stopt de score als er het afgelopen uur meer regen viel dan de ingestelde grens."
+        }
+      },
+      "forecast": {
+        "title": "Weersverwachting",
+        "data": {
+          "forecast_primary": "Primaire weersverwachting",
+          "forecast_secondary": "Aanvullende weersverwachting"
+        },
+        "data_description": {
+          "forecast_primary": "Deze bron wint per uur, bijvoorbeeld KNMI.",
+          "forecast_secondary": "Vult ontbrekende velden (zoals luchtvochtigheid) en latere uren aan, bijvoorbeeld Met.no."
+        }
+      },
+      "thresholds": {
+        "title": "Drempels en tijden",
+        "description": "Punten: VPD max 3, dauwpuntspreiding max 2, wind max 2, zon max 1. Een stopfactor zet de score op 0.",
+        "data": {
+          "vpd_1": "VPD voor 1 punt",
+          "vpd_2": "VPD voor 2 punten",
+          "vpd_3": "VPD voor 3 punten",
+          "spread_1": "Dauwpuntspreiding voor 1 punt",
+          "spread_2": "Dauwpuntspreiding voor 2 punten",
+          "spread_stop": "Stop onder dauwpuntspreiding",
+          "wind_min": "Wind voor 1 punt (vanaf)",
+          "wind_good_min": "Wind voor 2 punten: van",
+          "wind_good_max": "Wind voor 2 punten: tot en met",
+          "gust_stop": "Stop boven windvlagen",
+          "sun_min": "Zoninstraling voor 1 punt",
+          "rain_hour_stop": "Stop boven regen afgelopen uur",
+          "hang_threshold": "Buiten hangen vanaf score",
+          "day_start": "Verwachting vanaf",
+          "day_end": "Verwachting tot en met"
+        },
+        "data_description": {
+          "hang_threshold": "Maximaal 8 punten.",
+          "day_start": "Eerste uur van de dag dat meetelt in de verwachting."
+        }
+      }
+    },
+    "error": {
+      "need_humidity": "Kies een sensor voor luchtvochtigheid of dauwpunt.",
+      "order_vpd": "De VPD-grenzen moeten oplopen: 1 ≤ 2 ≤ 3 punten.",
+      "order_spread": "De grens voor 2 punten moet minstens die voor 1 punt zijn.",
+      "order_wind": "'Van' moet kleiner zijn dan 'tot en met'.",
+      "order_day": "Het beginuur moet voor het einduur liggen."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "score": {
+        "name": "Droogscore"
+      },
+      "forecast": {
+        "name": "Droogverwachting"
+      },
+      "next_window": {
+        "name": "Volgend droogvenster"
+      },
+      "first_rain": {
+        "name": "Eerste regen"
+      }
+    },
+    "binary_sensor": {
+      "hang_outside": {
+        "name": "Buiten hangen"
+      }
+    }
+  }
+}

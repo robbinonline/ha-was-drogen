@@ -1,0 +1,90 @@
+# Was drogen – dashboardweergave
+# Plak dit als nieuwe weergave (Dashboard → Bewerken → ⋮ → Raw-configuratie-editor)
+# of neem de losse kaarten over. Alleen standaardkaarten, geen HACS-kaarten nodig.
+# Entity-ID's gelden voor een Nederlandstalige HA; in het Engels heten ze
+# sensor.was_drogen_drying_score enzovoort.
+title: Was drogen
+path: was
+icon: mdi:tshirt-crew
+type: sections
+max_columns: 3
+sections:
+  - type: grid
+    cards:
+      - type: heading
+        heading: Nu
+        icon: mdi:tshirt-crew
+      - type: tile
+        entity: sensor.was_drogen_droogscore
+        name: Droogscore
+        grid_options:
+          columns: 6
+      - type: tile
+        entity: binary_sensor.was_drogen_buiten_hangen
+        name: Buiten hangen
+        grid_options:
+          columns: 6
+      - type: markdown
+        content: >-
+          {% set e = 'sensor.was_drogen_droogscore' %}
+          {% set f = state_attr(e, 'factoren') or {} %}
+          {% set lvl = state_attr(e, 'niveau') %}
+          {% set icon = {'good': '🟢', 'moderate': '🟡', 'bad': '🔴'}.get(lvl, '⚪') %}
+          {% set stops = state_attr(e, 'stopfactoren') or [] %}
+
+          ## {{ icon }} {{ state_attr(e, 'advies') }}
+
+          **Score {{ states(e) }}/{{ state_attr(e, 'max_score') }}**{% if state_attr(e, 'reden') %}
+          · {{ '⛔' if stops else 'grootste rem:' }} {{ state_attr(e, 'reden') }}{% endif %}
+
+
+          | Factor | Nu | Punten |
+
+          |:--|--:|:-:|
+
+          {% for key, label in [('vpd', '💧 Dampdrukdeficit'), ('spread', '🌡️ Dauwpuntspreiding'), ('wind', '💨 Wind'), ('sun', '☀️ Zoninstraling')] %}{% set x = f.get(key, {}) %}| {{ label }} | {{ x.get('waarde', '–') if x.get('waarde') is not none else '–' }} {{ x.get('eenheid', '') }} | {{ x.get('punten', 0) }}/{{ x.get('max', 0) }} |
+
+          {% endfor %}
+
+          {% if is_state('sun.sun', 'above_horizon') %}🌇 Zonsondergang {{ as_timestamp(state_attr('sun.sun', 'next_setting')) | timestamp_custom('%H:%M') }}: daarna loopt de vochtigheid snel op.{% else %}🌙 De zon is onder: 's avonds en 's nachts droogt de was nauwelijks (dauw).{% endif %}
+  - type: grid
+    cards:
+      - type: heading
+        heading: Verwachting
+        icon: mdi:crystal-ball
+      - type: markdown
+        content: >-
+          {% set e = 'sensor.was_drogen_droogverwachting' %}
+          {% set hang = state_attr(e, 'hang_grens') | int(6) %}
+          {% set start = state_attr(e, 'dag_start') | int(7) %}
+          {% set end = state_attr(e, 'dag_einde') | int(20) %}
+
+          **{{ states(e) }}**
+
+
+          | Dag | {{ '%02d' | format(start) }} ··· {{ '%02d' | format(end) }} | Beste venster |
+
+          |:--|:--|:--|
+
+          {% for d in state_attr(e, 'dagen') or [] %}{% set ns = namespace(row='') %}{% for c in d.scores %}{% if c in '-?' %}{% set ns.row = ns.row ~ '⬜' %}{% elif c | int >= hang %}{% set ns.row = ns.row ~ '🟩' %}{% elif c | int >= hang - 2 %}{% set ns.row = ns.row ~ '🟨' %}{% else %}{% set ns.row = ns.row ~ '🟥' %}{% endif %}{% endfor %}{% set w = d.beste_venster %}| **{{ d.label }}** | {{ ns.row }} | {% if w %}{{ as_timestamp(w.start) | timestamp_custom('%H:%M') }}–{{ as_timestamp(w.einde) | timestamp_custom('%H:%M') }}{% elif d.max_score is not none %}— (max {{ d.max_score }}){% else %}—{% endif %} |
+
+          {% endfor %}
+
+          🟩 goed ({{ hang }}+) · 🟨 matig · 🟥 slecht · ⬜ voorbij/geen data
+
+
+          {% set r = 'sensor.was_drogen_eerste_regen' %}🌧️ **Eerste regen:** {% if states(r) not in ['unknown', 'unavailable'] %}{% set rt = as_local(as_datetime(states(r))) %}{{ ['ma','di','wo','do','vr','za','zo'][rt.weekday()] }} {{ rt.strftime('%H:%M') }} ({{ state_attr(r, 'mm') }} mm){% else %}niet verwacht{% endif %}
+
+
+          <sub>Laatste update: {{ as_timestamp(state_attr(e, 'bijgewerkt')) | timestamp_custom('%H:%M') if state_attr(e, 'bijgewerkt') else '–' }}{% if state_attr(e, 'fouten') %} · ⚠️ {{ state_attr(e, 'fouten') | join(', ') }}{% endif %}</sub>
+  - type: grid
+    cards:
+      - type: heading
+        heading: Afgelopen 24 uur
+        icon: mdi:chart-line
+      - type: history-graph
+        title: Droogscore
+        hours_to_show: 24
+        entities:
+          - entity: sensor.was_drogen_droogscore
+            name: Score

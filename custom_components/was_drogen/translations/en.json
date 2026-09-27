@@ -1,0 +1,143 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Weather station",
+        "description": "Select your weather station sensors. Only temperature and humidity (or dew point) are required; more sensors give a more precise score.",
+        "data": {
+          "name": "Name",
+          "temperature": "Outdoor temperature",
+          "humidity": "Humidity",
+          "dew_point": "Dew point",
+          "vpd": "Vapour pressure deficit (VPD)",
+          "wind_speed": "Wind speed",
+          "wind_gust": "Wind gust",
+          "rain_rate": "Rain rate (mm/h)",
+          "rain_hourly": "Rain last hour (mm)",
+          "solar": "Solar radiation (W/m²)"
+        },
+        "data_description": {
+          "humidity": "Humidity or dew point is required; the other is calculated.",
+          "vpd": "Optional. Without it, VPD is calculated from temperature and humidity.",
+          "wind_speed": "Converted to km/h.",
+          "rain_hourly": "Stops the score when more rain fell in the last hour than the set limit."
+        }
+      },
+      "forecast": {
+        "title": "Weather forecast",
+        "description": "Select weather entities for the hourly forecast. With two sources they are merged per hour.",
+        "data": {
+          "forecast_primary": "Primary forecast",
+          "forecast_secondary": "Supplementary forecast"
+        },
+        "data_description": {
+          "forecast_primary": "This source wins per hour, e.g. KNMI.",
+          "forecast_secondary": "Fills missing fields (such as humidity) and later hours, e.g. Met.no."
+        }
+      }
+    },
+    "error": {
+      "need_humidity": "Select a humidity or dew point sensor.",
+      "order_vpd": "VPD limits must increase: 1 ≤ 2 ≤ 3 points.",
+      "order_spread": "The 2-point limit must be at least the 1-point limit.",
+      "order_wind": "'From' must be lower than 'up to'.",
+      "order_day": "Start hour must be before end hour."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Was drogen",
+        "menu_options": {
+          "station": "Weather station",
+          "forecast": "Weather forecast",
+          "thresholds": "Thresholds and times"
+        }
+      },
+      "station": {
+        "title": "Weather station",
+        "data": {
+          "temperature": "Outdoor temperature",
+          "humidity": "Humidity",
+          "dew_point": "Dew point",
+          "vpd": "Vapour pressure deficit (VPD)",
+          "wind_speed": "Wind speed",
+          "wind_gust": "Wind gust",
+          "rain_rate": "Rain rate (mm/h)",
+          "rain_hourly": "Rain last hour (mm)",
+          "solar": "Solar radiation (W/m²)"
+        },
+        "data_description": {
+          "humidity": "Humidity or dew point is required; the other is calculated.",
+          "vpd": "Optional. Without it, VPD is calculated from temperature and humidity.",
+          "wind_speed": "Converted to km/h.",
+          "rain_hourly": "Stops the score when more rain fell in the last hour than the set limit."
+        }
+      },
+      "forecast": {
+        "title": "Weather forecast",
+        "data": {
+          "forecast_primary": "Primary forecast",
+          "forecast_secondary": "Supplementary forecast"
+        },
+        "data_description": {
+          "forecast_primary": "This source wins per hour, e.g. KNMI.",
+          "forecast_secondary": "Fills missing fields (such as humidity) and later hours, e.g. Met.no."
+        }
+      },
+      "thresholds": {
+        "title": "Thresholds and times",
+        "description": "Points: VPD max 3, dew point spread max 2, wind max 2, sun max 1. A stop factor sets the score to 0.",
+        "data": {
+          "vpd_1": "VPD for 1 point",
+          "vpd_2": "VPD for 2 points",
+          "vpd_3": "VPD for 3 points",
+          "spread_1": "Dew point spread for 1 point",
+          "spread_2": "Dew point spread for 2 points",
+          "spread_stop": "Stop below dew point spread",
+          "wind_min": "Wind for 1 point (from)",
+          "wind_good_min": "Wind for 2 points: from",
+          "wind_good_max": "Wind for 2 points: up to",
+          "gust_stop": "Stop above wind gusts",
+          "sun_min": "Solar radiation for 1 point",
+          "rain_hour_stop": "Stop above rain last hour",
+          "hang_threshold": "Hang outside from score",
+          "day_start": "Forecast from hour",
+          "day_end": "Forecast up to hour"
+        },
+        "data_description": {
+          "hang_threshold": "Maximum is 8 points.",
+          "day_start": "First hour of the day included in the forecast."
+        }
+      }
+    },
+    "error": {
+      "need_humidity": "Select a humidity or dew point sensor.",
+      "order_vpd": "VPD limits must increase: 1 ≤ 2 ≤ 3 points.",
+      "order_spread": "The 2-point limit must be at least the 1-point limit.",
+      "order_wind": "'From' must be lower than 'up to'.",
+      "order_day": "Start hour must be before end hour."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "score": {
+        "name": "Drying score"
+      },
+      "forecast": {
+        "name": "Drying forecast"
+      },
+      "next_window": {
+        "name": "Next drying window"
+      },
+      "first_rain": {
+        "name": "First rain"
+      }
+    },
+    "binary_sensor": {
+      "hang_outside": {
+        "name": "Hang outside"
+      }
+    }
+  }
+}
